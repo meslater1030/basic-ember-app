@@ -130,7 +130,7 @@ installing route-test
   create tests/unit/routes/investments-test.js
 ```
 
-This command has created a blank route and template for your investments. it's also added an investments
+For more information about what kinds of things you can generate with Ember-cli use `ember generate help`. In this case the command has created a blank route and template for your investments. it's also added an investments
 route to the router and created a unit test for your new route. If you navigate to localhost:4200/investments
 you'll see that the page loads with the same text as the home page. In the future you'll use the new investments
 route and template to retrieve and display all available investments but before you can do that you need to 
@@ -138,14 +138,38 @@ learn how data is retrieved and manipulated in Ember.
 
 ### Your API
 Ember apps assume that your data will be provided via an API that follows the [JSON API specification.](http://jsonapi.org/format/)
-If your API does not follow those specifications it's still possible, although difficult, to configure your Ember application
-in another way. (TODO: link to tutorial) For this tutorial however, you'll use the API provided at https://basic-ember-app.firebaseio.com.
-
-[Firebase](https://firebase.google.com/) is a free tool made by Google that can provide simple database hosting and other
-tools for web applications. To use firebase for your application you'll need to install an ember addon. For now, don't 
-worry too much about what an Ember addon is.
+If your API does not follow those specifications it's still possible to configure your Ember application
+in another way. (TODO: link to tutorial) For this tutorial however, you'll use the JSON API provided at http://someUrl/api.
 
 (TODO: Make an API that can be accessible publicly. Requiring the use of an addon is too much mental overhead for this tutorial.)
+
+By default, Ember will attempt to access an API from the same origin as your Ember application. So in this case http://localhost:4200. 
+It's possible to specify another API origin by creating an application-wide api adapter. 
+
+You can use Ember-cli to generate an adapter.
+
+`ember generate adapter application`
+
+output:
+```
+~/Projects/basic-ember-app $ ember generate adapter application
+installing adapter
+  create app/adapters/application.js
+installing adapter-test
+  create tests/unit/adapters/application-test.js
+```
+
+Update the `basic-ember-app/app/adapters/application.js` file as follows:
+
+```
+import DS from 'ember-data';
+
+export default DS.JSONAPIAdapter.extend({
+  host: 'http://localhost:5000/api'
+});
+```
+
+Now all api calls will be made to `http://localhost:5000/api/whatever`.
 
 ## Ember-Data
 In this application, you're going to build an investment platform. It will include Investors, Investments, Advisors
@@ -166,8 +190,7 @@ installing model-test
   create tests/unit/models/investment-test.js
 ```
 
-For more information about what kinds of things you can generate with Ember-cli use `ember generate help`. In this case
-you've generated a model called investment with two properties that are strings and one that is a number. You've
+You've generated a model called investment with two properties that are strings and one that is a number. You've
 also generated a unit test for that model. If you navigate to `basic-ember-app/app/models/investment.js` You should see
 the following:
 
