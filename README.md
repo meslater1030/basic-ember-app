@@ -7,7 +7,8 @@ Ember Routes and routing, Components and Controllers, and Testing.
 #### Difficulty Level
 
 This tutorial may be accessible to advanced or ambitious beginners but is written for developers with some
-experience in writing [MVC web applications](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller).
+experience in writing [MVC web applications](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) 
+and who have a working knowledge of ES6.
 
 #### Solution
 This repository contains the end result of the tutorial. You'll be writing the application from scratch so no initial
@@ -19,7 +20,7 @@ You will need the following things properly installed on your computer.
 
 * [Git](https://git-scm.com/book/en/v1/Getting-Started-Installing-Git)
 * [Node.js](https://nodejs.org/en/download/package-manager/)
-  * NPM will be installed alongside Node. No additional installation will be necessary.
+  * NPM will be installed alongside Node.
 * [Bower](https://bower.io/#install-bower) (install with NPM)
 * [Ember CLI](http://www.ember-cli.com/) (install with NPM)
 * [PhantomJS](https://www.npmjs.com/package/phantomjs) (install with NPM)
@@ -38,7 +39,7 @@ Navigate to wherever you'd like this application to belong and run the following
 ```ember new basic-ember-app```
 
 If you were creating your own project, you'd replace `basic-ember-app` with the name of your project. You should see command
-line output that looks something like the following (your results may vary depending on the exact version of ember-cli
+line output that looks something like the following (your results may vary slightly depending on the exact version of ember-cli
 you've installed):  
 
 ```
@@ -109,9 +110,12 @@ broccoli-persistent-filter:Babel (4)          | 1339ms (334 ms)
 broccoli-persistent-filter:Babel > [Ba... (2) | 270ms (135 ms)
 ```
 
-Navigate to localhost:4200. You should see a page that says "Welcome to Ember":
+Navigate to localhost:4200. You should see a page that says "Congratulations, you made it!":
 
 ### Troubleshooting
 (TODO: try to think of stuff that might have gone wrong)
 
-## 
+## Ember-Data
+In this application, you're going to build an investment platform. It will include investors, investments, advisors
+and accounts. Before building out templates and forms to handle that information you'll need a way to retrieve
+and manage the data itself. Ember-Data is the data persistence library that comes pre-packaged with any Ember app.
