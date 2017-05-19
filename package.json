@@ -1,7 +1,7 @@
 {
-  "name": "basic-ember-app",
+  "name": "ember-app",
   "version": "0.0.0",
-  "description": "Small description for basic-ember-app goes here",
+  "description": "Small description for ember-app goes here",
   "license": "MIT",
   "author": "",
   "directories": {
@@ -28,7 +28,6 @@
     "ember-cli-qunit": "^4.0.0",
     "ember-cli-shims": "^1.1.0",
     "ember-cli-sri": "^2.1.0",
-    "ember-cli-test-loader": "2.1.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-data": "^2.13.0",
     "ember-export-application-global": "^2.0.0",
