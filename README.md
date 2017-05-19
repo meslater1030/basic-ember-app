@@ -292,4 +292,22 @@ you'll go ahead and use the investment route you generated earlier.
 ## Display your investments
 Go to `basic-ember-app/app/routes/investments` and update it to load your investments.
 
+```
+import Ember from 'ember';
 
+export default Ember.Route.extend({
+  model() {
+    return this.get('store').findAll('investment');
+  }
+});
+```
+
+You've just defined the model for the route as investments. Explain things about how that data gets passed around.
+
+Go to `basic-ember-app/app/templates/investments` and update it to display your investments.
+
+```
+{{#each model as |investment|}}
+  {{investment.symbol}} {{investment.unitPrice}} {{investment.exchange}}
+{{/each}}
+```
