@@ -132,7 +132,9 @@ installing route-test
 
 This command has created a blank route and template for your investments. it's also added an investments
 route to the router and created a unit test for your new route. If you navigate to localhost:4200/investments
-you'll see that the page loads with the same text as the home page.
+you'll see that the page loads with the same text as the home page. In the future you'll use the new investments
+route and template to retrieve and display all available investments but before you can do that you need to 
+learn how data is retrieved and manipulated in Ember.
 
 ### Your API
 Ember apps assume that your data will be provided via an API that follows the [JSON API specification.](http://jsonapi.org/format/)
@@ -263,3 +265,8 @@ Delete:
 
 For now, you'd just like to retrieve the available investments. This can be done in a variety of ways but
 you'll go ahead and use the investment route you generated earlier.
+
+## Display your investments
+Go to `basic-ember-app/app/routes/investments` and update it to load your investments.
+
+
