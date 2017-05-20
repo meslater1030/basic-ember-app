@@ -1,7 +1,7 @@
 # Basic Ember App
 
-This is a short tutorial covering the basics of [CRUD operations](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) within and Ember app. We will discuss the nature and basic
-usage of ember-cli, the fundamentals of how Ember interacts with your JSON API, creating Templates and
+This is a short tutorial covering the basics of [CRUD operations](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) within an Ember app. 
+We will discuss the nature and basic usage of ember-cli, the fundamentals of how Ember interacts with your JSON API, creating Templates and
 Ember Routes.
 
 #### Difficulty Level
@@ -208,15 +208,19 @@ display those investments. The DS.Model object from Ember-Data will
 manage CRUD operations in the following way (for now, don't worry too much about what the 'store' is):
 
 Create:
+
 `this.get('store').createRecord('investment', { symbol, unitPrice, exchange })` corresponds to a POST API call to `http://www.myUrl.com/api/investments`
 
 Retrieve:
+
 `this.get('store').findAll('investment')` corresponds to a GET API call to `http://www.myUrl.com/api/investments`
 
 Update:
+
 `investment.save()` corresponds to a PUT API call to `http://www.myUrl.com/api/investments/id`
 
 Delete:
+
 `investment.delete()` corresponds to a DELETE API call to `http://www.myUrl.com/api/investments/id`.
 
 For now, you'd just like to retrieve the available investments. This can be done in a variety of ways but
@@ -250,7 +254,7 @@ Go to `basic-ember-app/app/templates/application` and delete the `{{welcome-page
 Go to `basic-ember-app/app/templates/investments` and update it to display your investments.
 
 ```
-{{#each model.investments as |investment|}} {{!-- The |investment| variable can be given any name --}}
+{{#each model.investments as |investment|}} {{!-- The investment variable can be given any name --}}
   <p>
       {{investment.symbol}} {{investment.unitPrice}} {{investment.exchange}}
   </p>
