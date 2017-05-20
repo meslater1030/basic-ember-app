@@ -1,3 +1,5 @@
-{{#each model as |investment|}}
-  {{investment.symbol}} {{investment.unitPrice}} {{investment.exchange}}
+{{#each model.investments as |investment|}}
+  <p>
+    {{investment.symbol}} {{investment.unitPrice}} {{investment.exchange}}
+  </p>
 {{/each}}
