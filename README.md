@@ -1,8 +1,7 @@
 # Basic Ember App
 
 This is a short tutorial covering the basics of [CRUD operations](https://en.wikipedia.org/wiki/Create,_read,_update_and_delete) within an Ember app. 
-We will discuss the nature and basic usage of ember-cli, the fundamentals of how Ember interacts with your JSON API, creating Templates and
-Ember Routes.
+We will discuss the nature and basic usage of ember-cli, the fundamentals of how Ember interacts with your JSON API and the creation of basic Templates and Routes.
 
 #### Difficulty Level
 
@@ -32,7 +31,7 @@ You will need the following things properly installed on your computer.
  You might at this point be wondering why you've installed something called ember-cli rather than just plain Ember. ember-cli
  is Ember's command line interface and it's an easy-to-use package of opinionated build tools for Ember itself.
  In future tutorials you'll cover both ember-cli and it's foundation, [Broccoli](http://broccolijs.com/). 
- That said, until you know a little more about how to use it don't worry too much about the specific nature of Ember-Cli.
+ That said, until you know a little more about how to use it don't worry too much about the specific nature of ember-cli.
  This will become more clear in time. For this tutorial you'll be using it to generate the bare bones of your application, models, routes and
  components.
  
@@ -133,15 +132,13 @@ For more information about what kinds of things you can generate with ember-cli 
 In this case the command has created a blank route and template for your investments. it has also added an investments
 route to the router and created a unit test for your new route. If you navigate to localhost:4200/investments
 you'll see that the page loads with the same text as the home page. In the future you'll use the new investments
-route and template to retrieve and display all available investments but before you can do that you need to 
+route and template to retrieve and display all available investments. Before you can do that, you need to 
 learn how data is retrieved and manipulated in Ember.
 
 ### Your API
 Ember apps assume that your data will be provided via an API that follows the [JSON API specification.](http://jsonapi.org/format/)
 If your API does not follow those specifications it's still possible to configure your Ember application
-in another way. (TODO: link to tutorial) For this tutorial however, you'll use the JSON API provided at http://someUrl/api.
-
-(TODO: Make an API that can be accessible publicly. Requiring the use of an addon is too much mental overhead for this tutorial.)
+in another way. For this tutorial however, you'll use the JSON API provided at http://127.0.0.1:5000.
 
 By default, Ember will attempt to access an API from the same origin as your Ember application. So in this case http://localhost:4200. 
 It's possible to specify another API origin by creating an application-wide api adapter. 
@@ -165,31 +162,31 @@ Update the `basic-ember-app/app/adapters/application.js` file as follows:
 import DS from 'ember-data';
 
 export default DS.JSONAPIAdapter.extend({
-  host: 'http://localhost:5000/api'
+  host: 'http://127.0.0.1:5000'
 });
 ```
 
-Now all api calls for all models will be made to `http://localhost:5000/api/whatever`.
+Now all api calls for all models will be made to `http://127.0.0.1:5000/{someModel}`.
 
 ## Ember-Data
 In this application, you're going to display information about investments. Before building out templates and forms to handle that 
-information you'll need a way to retrieve and manage the data itself. Ember-Data is the data persistence library that comes 
+information you'll need a way to retrieve and manage the data itself. Ember-data is the data persistence library that comes 
 pre-packaged with any Ember app. You'll be using it to create models and retrieve information from an API.
 
 You can use ember-cli to generate an ember-data model. 
 
-`ember generate model investment symbol:string unitPrice:number exchange:string`
+`ember generate model investment symbol:string unitPrice:number`
 
 output:
 ```
-~/Projects/basic-ember-app $ ember generate model investment symbol:string unitPrice:number exchange:string
+~/Projects/basic-ember-app $ ember generate model investment symbol:string unitPrice:number
 installing model
   create app/models/investment.js
 installing model-test
   create tests/unit/models/investment-test.js
 ```
 
-You've generated a model called investment with two properties that are strings and one that is a number. You've
+You've generated a model called investment with a symbol attribute that's a string and a unitPrice attribute that's a number. You've
 also generated a unit test for that model. If you navigate to `basic-ember-app/app/models/investment.js` You should see
 the following:
 
@@ -198,30 +195,31 @@ import DS from 'ember-data';
 
 export default DS.Model.extend({
   symbol: DS.attr('string'),
-  unitPrice: DS.attr('string'),
-  exchange: DS.attr('string')
+  unitPrice: DS.attr('number')
 });
 ```
 
 Now that you have an investment model, you'll want to retrieve and 
-display those investments. The DS.Model object from Ember-Data will
+display those investments. Ember-data will
 manage CRUD operations in the following way (for now, don't worry too much about what the 'store' is):
 
 Create:
 
-`this.get('store').createRecord('investment', { symbol, unitPrice, exchange })` corresponds to a POST API call to `http://www.myUrl.com/api/investments`
+`const investment = this.get('store').createRecord('investment', { symbol, unitPrice }); investment.save()` corresponds to a POST API call to `http://127.0.0.1:5000/investments`
 
 Retrieve:
 
-`this.get('store').findAll('investment')` corresponds to a GET API call to `http://www.myUrl.com/api/investments`
+`this.get('store').findAll('investment')` corresponds to a GET API call to `http://127.0.0.1:5000/investments`
+
+`this.get('store').find('investment', 1)` corresponds to a GET API call to `http://127.0.0.1:5000/investments/1`
 
 Update:
 
-`investment.save()` corresponds to a PUT API call to `http://www.myUrl.com/api/investments/id`
+`investment.save()` corresponds to a PUT API call to `http://127.0.0.1:5000/investments/id`
 
 Delete:
 
-`investment.delete()` corresponds to a DELETE API call to `http://www.myUrl.com/api/investments/id`.
+`investment.delete()` corresponds to a DELETE API call to `http://127.0.0.1:5000/investments/id`.
 
 For now, you'd just like to retrieve the available investments. This can be done in a variety of ways but
 you'll go ahead and use the investment route you generated earlier.
@@ -234,43 +232,149 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   model() {
-    return Ember.RSVP.hash({
-        investments: this.get('store').findAll('investment')
-    });
+    return this.get('store').findAll('investment');
   }
 });
 ```
-As noted above, `this.get('store').findAll('investment')` will make a GET API call to `http://www.myUrl.com/api/investments`
-and will return every available investment. `findAll` is a method that returns a promise.
+As noted above, `this.get('store').findAll('investment')` will make a GET API call to `http://127.0.0.1:5000/investments`
+and will return every available investment.
 
-Once a model is defined within a route, that information will be made available to the controller
-of the same name as that route and therefore also the template. In your case
-it would be simple enough to just return `this.get('store').findAll('investment')` as the entire model. However, that
-implementation isn't particularly flexible if more information will ultimately be required. Therefore, returning
-a hash of promises provides you with the ability to load more models if necessary.
+Go to `basic-ember-app/app/templates/application.hbs` and delete the default `{{welcome-page}}` found there. In the future
+you'll be updating the application template to display the kind of information you would expect to see
+on every page of your application (header, footer, navbar, etc). For now, the `{{outlet}}` tag will
+display any information located on templates nested inside the application template. In your case this includes the investment template
+created earlier by ember-cli when you generated a investments route.
 
-Go to `basic-ember-app/app/templates/application` and delete the `{{welcome-page}}` found there.
-
-Go to `basic-ember-app/app/templates/investments` and update it to display your investments.
+Go to `basic-ember-app/app/templates/investments.hbs` and update it to display your investments.
 
 ```
 {{#each model.investments as |investment|}} {{!-- The investment variable can be given any name --}}
   <p>
-      {{investment.symbol}} {{investment.unitPrice}} {{investment.exchange}}
+    {{investment.symbol}}
+    {{investment.unitPrice}}
   </p>
 {{/each}}
 ```
 
-Navigate to localhost:4200/investments and you should now see a rather boring list of
-investment ticker symbols, prices and the exchanges on which they are sold.
+Navigate to localhost:4200/investments and you should now see a list of investments.
 
-## But what about the controller?
-You may have noticed that while we've referred to Ember as an MVC framework there's no 'C' in the app as it currently exists.
-You may also have noticed that the app is pretty ugly as it currently exists. 
-Since you haven't required any particular display modifications it doesn't 
-currently make sense to require a controller or component. More information
-on customizing display options will be given in the next tutorial.
+## Create an Investment
+Now that you've retrieved your investments you want to create a new one. To do so 
+we'll make use of a controller. 
 
+You can use ember-cli to generate a controller:
 
-Do you really want to cover all CRUD operations? This is kind of a nice ending
-place.
+`ember generate controller investments`
+
+output:
+```
+~/Projects/basic-ember-app $ ember generate controller investments
+installing controller
+  create app/controllers/investments.js
+installing controller-test
+  create tests/unit/controllers/investments-test.js
+```
+
+Go to `basic-ember-app/app/controllers/investments.js` and update it to include a method for creating an investment.
+```
+import Ember from 'ember';
+
+export default Ember.Controller.extend({
+  symbol: null,
+  unitPrice: null,
+  actions: {
+    createInvestment() {
+      const investment = this.get('store').createRecord('investment', {
+        symbol: this.get('symbol'),
+        unitPrice: this.get('unitPrice')
+      });
+      return investment.save();
+    }
+  }
+});
+```
+
+Go to `basic-ember-app/app/templates/investments.hbs` and update it to include fields for creating an investment.
+
+```
+<form onsubmit={{action 'createInvestment'}}>
+    <h3>Create a new Investment</h3>
+    <label for="symbol">Symbol</label>
+    {{input id="symbol" type="text" value=symbol}}
+    <label for="unitPrice">Unit Price</label>
+    {{input id="unitPrice" type="number" value=unitPrice}}
+    <button type="submit">Create</button>
+</form>
+<h3>Existing Investments</h3>
+{{#each model as |investment|}}
+  <p>
+    {{investment.symbol}}
+    {{investment.unitPrice}}
+  </p>
+{{/each}}
+
+```
+
+FAQ:
+
+1. How are the symbol and unit price populated?
+  * These properties are bound to the template and updated as the user enters information. The exact mechanism of this
+  binding is beyond the scope of this tutorial and not necessary to understand in order to proceed.
+2. Why is the createInvestment method within another property called actions?
+  * Ember automatically looks for an `actions` hook within Components, Controllers and Routes as a way to bind behavior to 
+  DOM elements within the template.
+3. What is this `{{action 'createInvestment'}}` thing?
+  * This is the way in which Ember will bind methods within the actions has to the element. In this case, the action will
+  be triggered `onsubmit`. If you would prefer the action to trigger on another event (such as `onclick` or `onfocus`) then
+  you could specify that event instead.
+4. Where did `{{input}}` come from? Can't I just use an `<input>` html element?
+  * You can use an html element for this if you prefer; binding the desired value to the value attribute on that element. 
+  The `{{input}}` helper comes as a default helper with Ember and is included here so you know it exists. Helpers will
+  be covered in more detail in another tutorial.
+  
+You should now have a very short form that collects data from the user and then creates a new investment
+when the 'create' button is clicked. As a matter of course you would probably want to validate this information
+in some way before saving it to your database. However, for the moment we'll save the discussion on Ember validation
+libraries for another time and move on.
+
+## Update and Delete your Investments
+
+Go to `basic-ember-app/app/controllers/investments.js` and update the actions hook with a new method for updating an investment.
+
+```
+updateInvestment(investment) {
+  return investment.save();
+}
+```
+
+Go to `basic-ember-app/app/templates/investments.hbs` and update the template to make your new method available
+to every investment.
+
+```
+{{!-- Existing investment form is not changed --}}
+{{#each model as |investment|}}
+  <p>
+    {{input type="text" value=investment.symbol}}
+    {{input type="number" value=investment.unitPrice}}
+    <button onclick={{action 'updateInvestment' investment}}>Update</button>
+  </p>
+{{/each}}
+```
+
+You'll notice that you're able to pass arguments from the template into your action method
+by specifying those arguments after the name of the action method in question. If the user has edited
+those values within the input fields then the values have already been updated and the only 
+thing left to do is save the udpated investment. That save will send a PUT request to `http://127.0.0.1:5000/investments/id`
+to update the investment.
+
+Adding a delete method is just as simple. See whether you can implement it on your own.
+
+## Review Questions
+
+1. What API specification does Ember expect you to use by default?
+  * In what format would you expect to receive information from a call to `myurl/api/investments`? (ie. write it out)
+2. What is one way you've used ember-cli to create this project?
+3. How can you bind behavior to DOM elements?
+4. What command do you use to start an Ember app from the command line?
+5. How is information loaded in the route made available in other places?
+
