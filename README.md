@@ -324,7 +324,7 @@ FAQ:
   * Ember automatically looks for an `actions` hook within Components, Controllers and Routes as a way to bind behavior to 
   DOM elements within the template.
 3. What is this `{{action 'createInvestment'}}` thing?
-  * This is the way in which Ember will bind methods within the actions has to the element. In this case, the action will
+  * This is the way in which Ember will bind methods within the actions hook to the element. In this case, the action will
   be triggered `onsubmit`. If you would prefer the action to trigger on another event (such as `onclick` or `onfocus`) then
   you could specify that event instead.
 4. Where did `{{input}}` come from? Can't I just use an `<input>` html element?
@@ -362,9 +362,8 @@ to every investment.
 ```
 
 You'll notice that you're able to pass arguments from the template into your action method
-by specifying those arguments after the name of the action method in question. If the user has edited
-those values within the input fields then the values have already been updated and the only 
-thing left to do is save the udpated investment. That save will send a PUT request to `http://127.0.0.1:5000/investments/id`
+by specifying those arguments after the name of the action method in question. In this case we've passed through the investment.
+`investment.save()` is all that's left to do to update the investment. That save method will send a PUT request to `http://127.0.0.1:5000/investments/id`
 to update the investment.
 
 Adding a delete method is just as simple. See whether you can implement it on your own.
