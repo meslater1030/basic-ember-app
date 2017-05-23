@@ -7,7 +7,7 @@ const Router = Ember.Router.extend({
 });
 
 Router.map(function() {
-  this.route('investments');
+  this.route('users');
 });
 
 export default Router;

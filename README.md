@@ -107,32 +107,32 @@ Babel (15)                                    | 6882ms (458 ms)
 Navigate to localhost:4200. You should see a page that says "Congratulations, you made it!":
 
 ### Routing
-You'll start your app by retrieving a list of investments and displaying them on a page. In the real world
+You'll start your app by retrieving a list of users and displaying them on a page. In the real world
 if this is all you needed to do you'd be a fool to do it with something as heavy-weight as Ember. 
 As you'll see, a fair number of steps are required set up the page for such a simple task. 
 However, for the purposes of learning the framework it's helpful to start with CRUD operations
 and for you the first of those will be retrieval.
 
 You can use ember-cli to generate a route:
-`ember generate route investments`
+`ember generate route users`
 
 output:
 ```
-~/Projects/basic-ember-app $ ember generate route investments
+~/Projects/basic-ember-app $ ember generate route users
 installing route
-  create app/routes/investments.js
-  create app/templates/investments.hbs
+  create app/routes/users.js
+  create app/templates/users.hbs
 updating router
-  add route investments
+  add route users
 installing route-test
-  create tests/unit/routes/investments-test.js
+  create tests/unit/routes/users-test.js
 ```
 
 For more information about what kinds of things you can generate with ember-cli use `ember generate help`. 
-In this case the command has created a blank route and template for your investments. it has also added an investments
-route to the router and created a unit test for your new route. If you navigate to localhost:4200/investments
-you'll see that the page loads with the same text as the home page. In the future you'll use the new investments
-route and template to retrieve and display all available investments. Before you can do that, you need to 
+In this case the command has created a blank route and template for your users. it has also added an users
+route to the router and created a unit test for your new route. If you navigate to localhost:4200/users
+you'll see that the page loads with the same text as the home page. In the future you'll use the new users
+route and template to retrieve and display all available users. Before you can do that, you need to 
 learn how data is retrieved and manipulated in Ember.
 
 ### Your API
@@ -169,147 +169,145 @@ export default DS.JSONAPIAdapter.extend({
 Now all api calls for all models will be made to `http://127.0.0.1:5000/{someModel}`.
 
 ## Ember-Data
-In this application, you're going to display information about investments. Before building out templates and forms to handle that 
+In this application, you're going to display information about users. Before building out templates and forms to handle that 
 information you'll need a way to retrieve and manage the data itself. Ember-data is the data persistence library that comes 
 pre-packaged with any Ember app. You'll be using it to create models and retrieve information from an API.
 
 You can use ember-cli to generate an ember-data model. 
 
-`ember generate model investment symbol:string unitPrice:number`
+`ember generate model user firstName:string lastName:string`
 
 output:
 ```
-~/Projects/basic-ember-app $ ember generate model investment symbol:string unitPrice:number
+~/Projects/basic-ember-app $ ember generate model user firstName:string lastName:string
 installing model
-  create app/models/investment.js
+  create app/models/user.js
 installing model-test
-  create tests/unit/models/investment-test.js
+  create tests/unit/models/user-test.js
 ```
 
-You've generated a model called investment with a symbol attribute that's a string and a unitPrice attribute that's a number. You've
-also generated a unit test for that model. If you navigate to `basic-ember-app/app/models/investment.js` You should see
+You've generated a model called user with a firstName and lastName attribute that are both strings. You've
+also generated a unit test for that model. If you navigate to `basic-ember-app/app/models/user.js` You should see
 the following:
 
 ```
 import DS from 'ember-data';
 
 export default DS.Model.extend({
-  symbol: DS.attr('string'),
-  unitPrice: DS.attr('number')
+  firstName: DS.attr('string'),
+  lastName: DS.attr('string')
 });
 ```
 
-Now that you have an investment model, you'll want to retrieve and 
-display those investments. Ember-data will
+Now that you have an user model, you'll want to retrieve and 
+display those users. Ember-data will
 manage CRUD operations in the following way (for now, don't worry too much about what the 'store' is):
 
 Create:
 
-`const investment = this.get('store').createRecord('investment', { symbol, unitPrice }); investment.save()` corresponds to a POST API call to `http://127.0.0.1:5000/investments`
+`const user = this.get('store').createRecord('user', { firstName, lastName }); user.save()` corresponds to a POST API call to `http://127.0.0.1:5000/users`
 
 Retrieve:
 
-`this.get('store').findAll('investment')` corresponds to a GET API call to `http://127.0.0.1:5000/investments`
+`this.get('store').findAll('user')` corresponds to a GET API call to `http://127.0.0.1:5000/users`
 
-`this.get('store').find('investment', 1)` corresponds to a GET API call to `http://127.0.0.1:5000/investments/1`
+`this.get('store').find('user', 1)` corresponds to a GET API call to `http://127.0.0.1:5000/users/1`
 
 Update:
 
-`investment.save()` corresponds to a PUT API call to `http://127.0.0.1:5000/investments/id`
+`user.save()` corresponds to a PUT API call to `http://127.0.0.1:5000/users/id`
 
 Delete:
 
-`investment.delete()` corresponds to a DELETE API call to `http://127.0.0.1:5000/investments/id`.
+`user.delete()` corresponds to a DELETE API call to `http://127.0.0.1:5000/users/id`.
 
-For now, you'd just like to retrieve the available investments. This can be done in a variety of ways but
-you'll go ahead and use the investment route you generated earlier.
+For now, you'd just like to retrieve the available users. This can be done in a variety of ways but
+you'll go ahead and use the user route you generated earlier.
 
-## Display your investments
-Go to `basic-ember-app/app/routes/investments` and update it to load your investments.
+## Display your users
+Go to `basic-ember-app/app/routes/users` and update it to load your users.
 
 ```
 import Ember from 'ember';
 
 export default Ember.Route.extend({
   model() {
-    return this.get('store').findAll('investment');
+    return this.get('store').findAll('user');
   }
 });
 ```
-As noted above, `this.get('store').findAll('investment')` will make a GET API call to `http://127.0.0.1:5000/investments`
-and will return every available investment.
+As noted above, `this.get('store').findAll('user')` will make a GET API call to `http://127.0.0.1:5000/users`
+and will return every available user.
 
 Go to `basic-ember-app/app/templates/application.hbs` and delete the default `{{welcome-page}}` found there. In the future
 you'll be updating the application template to display the kind of information you would expect to see
 on every page of your application (header, footer, navbar, etc). For now, the `{{outlet}}` tag will
-display any information located on templates nested inside the application template. In your case this includes the investment template
-created earlier by ember-cli when you generated a investments route.
+display any information located on templates nested inside the application template. In your case this includes the user template
+created earlier by ember-cli when you generated a users route.
 
-Go to `basic-ember-app/app/templates/investments.hbs` and update it to display your investments.
+Go to `basic-ember-app/app/templates/users.hbs` and update it to display your users.
 
 ```
-{{#each model.investments as |investment|}} {{!-- The investment variable can be given any name --}}
+{{#each model.users as |user|}} {{!-- The user variable can be given any name --}}
   <p>
-    {{investment.symbol}}
-    {{investment.unitPrice}}
+    {{user.firstName}} {{user.lastName}}
   </p>
 {{/each}}
 ```
 
-Navigate to localhost:4200/investments and you should now see a list of investments.
+Navigate to localhost:4200/users and you should now see a list of users.
 
-## Create an Investment
-Now that you've retrieved your investments you want to create a new one. To do so 
+## Create an user
+Now that you've retrieved your users you want to create a new one. To do so 
 we'll make use of a controller. 
 
 You can use ember-cli to generate a controller:
 
-`ember generate controller investments`
+`ember generate controller users`
 
 output:
 ```
-~/Projects/basic-ember-app $ ember generate controller investments
+~/Projects/basic-ember-app $ ember generate controller users
 installing controller
-  create app/controllers/investments.js
+  create app/controllers/users.js
 installing controller-test
-  create tests/unit/controllers/investments-test.js
+  create tests/unit/controllers/users-test.js
 ```
 
-Go to `basic-ember-app/app/controllers/investments.js` and update it to include a method for creating an investment.
+Go to `basic-ember-app/app/controllers/users.js` and update it to include a method for creating an user.
 ```
 import Ember from 'ember';
 
 export default Ember.Controller.extend({
-  symbol: null,
-  unitPrice: null,
+  firstName: null,
+  lastName: null,
   actions: {
-    createInvestment() {
-      const investment = this.get('store').createRecord('investment', {
-        symbol: this.get('symbol'),
-        unitPrice: this.get('unitPrice')
+    createuser() {
+      const user = this.get('store').createRecord('user', {
+        firstName: this.get('firstName'),
+        lastName: this.get('lastName')
       });
-      return investment.save();
+      return user.save();
     }
   }
 });
 ```
 
-Go to `basic-ember-app/app/templates/investments.hbs` and update it to include fields for creating an investment.
+Go to `basic-ember-app/app/templates/users.hbs` and update it to include fields for creating an user.
 
 ```
-<form onsubmit={{action 'createInvestment'}}>
-    <h3>Create a new Investment</h3>
-    <label for="symbol">Symbol</label>
-    {{input id="symbol" type="text" value=symbol}}
-    <label for="unitPrice">Unit Price</label>
-    {{input id="unitPrice" type="number" value=unitPrice}}
+<form onsubmit={{action 'createuser'}}>
+    <h3>Create a new user</h3>
+    <label for="first-name">First Name</label>
+    {{input id="first-name" type="text" value=firstName}}
+    <label for="last-name">Last Name</label>
+    {{input id="last-name" type="text" value=lastName}}
     <button type="submit">Create</button>
 </form>
-<h3>Existing Investments</h3>
-{{#each model as |investment|}}
+<h3>Existing users</h3>
+{{#each model as |user|}}
   <p>
-    {{investment.symbol}}
-    {{investment.unitPrice}}
+    {{user.firstName}} {{user.lastName}}
   </p>
 {{/each}}
 
@@ -317,13 +315,13 @@ Go to `basic-ember-app/app/templates/investments.hbs` and update it to include f
 
 FAQ:
 
-1. How are the symbol and unit price populated?
+1. How are the first and last name populated?
   * These properties are bound to the template and updated as the user enters information. The exact mechanism of this
   binding is beyond the scope of this tutorial and not necessary to understand in order to proceed.
-2. Why is the createInvestment method within another property called actions?
+2. Why is the createuser method within another property called actions?
   * Ember automatically looks for an `actions` hook within Components, Controllers and Routes as a way to bind behavior to 
   DOM elements within the template.
-3. What is this `{{action 'createInvestment'}}` thing?
+3. What is this `{{action 'createuser'}}` thing?
   * This is the way in which Ember will bind methods within the actions hook to the element. In this case, the action will
   be triggered `onsubmit`. If you would prefer the action to trigger on another event (such as `onclick` or `onfocus`) then
   you could specify that event instead.
@@ -332,46 +330,46 @@ FAQ:
   The `{{input}}` helper comes as a default helper with Ember and is included here so you know it exists. Helpers will
   be covered in more detail in another tutorial.
   
-You should now have a very short form that collects data from the user and then creates a new investment
+You should now have a very short form that collects data from the user and then creates a new user
 when the 'create' button is clicked. As a matter of course you would probably want to validate this information
 in some way before saving it to your database. However, for the moment we'll save the discussion on Ember validation
 libraries for another time and move on.
 
-## Update and Delete your Investments
+## Update and Delete your users
 
-Go to `basic-ember-app/app/controllers/investments.js` and update the actions hook with a new method for updating an investment.
+Go to `basic-ember-app/app/controllers/users.js` and update the actions hook with a new method for updating an user.
 
 ```
-updateInvestment(investment) {
-  return investment.save();
+updateuser(user) {
+  return user.save();
 }
 ```
 
-Go to `basic-ember-app/app/templates/investments.hbs` and update the template to make your new method available
-to every investment.
+Go to `basic-ember-app/app/templates/users.hbs` and update the template to make your new method available
+to every user.
 
 ```
-{{!-- Existing investment form is not changed --}}
-{{#each model as |investment|}}
+{{!-- Existing user form is not changed --}}
+{{#each model as |user|}}
   <p>
-    {{input type="text" value=investment.symbol}}
-    {{input type="number" value=investment.unitPrice}}
-    <button onclick={{action 'updateInvestment' investment}}>Update</button>
+    {{input type="text" value=user.firstName}}
+    {{input type="text" value=user.lastName}}
+    <button onclick={{action 'updateUser' user}}>Update</button>
   </p>
 {{/each}}
 ```
 
 You'll notice that you're able to pass arguments from the template into your action method
-by specifying those arguments after the name of the action method in question. In this case we've passed through the investment.
-`investment.save()` is all that's left to do to update the investment. That save method will send a PUT request to `http://127.0.0.1:5000/investments/id`
-to update the investment.
+by specifying those arguments after the name of the action method in question. In this case we've passed through the user.
+`user.save()` is all that's left to do to update the user. That save method will send a PUT request to `http://127.0.0.1:5000/users/id`
+to update the user.
 
 Adding a delete method is just as simple. See whether you can implement it on your own.
 
 ## Review Questions
 
 1. What API specification does Ember expect you to use by default?
-  * In what format would you expect to receive information from a call to `myurl/api/investments`? (ie. write it out)
+  * In what format would you expect to receive information from a call to `myurl/api/users`? (ie. write it out)
 2. What is one way you've used ember-cli to create this project?
 3. How can you bind behavior to DOM elements?
 4. What command do you use to start an Ember app from the command line?
