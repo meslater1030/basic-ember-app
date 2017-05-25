@@ -129,7 +129,7 @@ installing route-test
 ```
 
 For more information about what kinds of things you can generate with ember-cli use `ember generate help`. 
-In this case the command has created a blank route and template for your users. it has also added an users
+In this case the command has created a blank route and template for your users. it has also added a users
 route to the router and created a unit test for your new route. If you navigate to localhost:4200/users
 you'll see that the page loads with the same text as the home page. In the future you'll use the new users
 route and template to retrieve and display all available users. Before you can do that, you need to 
@@ -138,7 +138,7 @@ learn how data is retrieved and manipulated in Ember.
 ### Your API
 Ember apps assume that your data will be provided via an API that follows the [JSON API specification.](http://jsonapi.org/format/)
 If your API does not follow those specifications it's still possible to configure your Ember application
-in another way. For this tutorial however, you'll use the JSON API provided at http://127.0.0.1:5000.
+in another way. For this tutorial however, you'll use the JSON API provided at https://simple-investing-app.herokuapp.com.
 
 By default, Ember will attempt to access an API from the same origin as your Ember application. So in this case http://localhost:4200. 
 It's possible to specify another API origin by creating an application-wide api adapter. 
@@ -162,11 +162,11 @@ Update the `basic-ember-app/app/adapters/application.js` file as follows:
 import DS from 'ember-data';
 
 export default DS.JSONAPIAdapter.extend({
-  host: 'http://127.0.0.1:5000'
+  host: 'https://simple-investing-app.herokuapp.com'
 });
 ```
 
-Now all api calls for all models will be made to `http://127.0.0.1:5000/{someModel}`.
+Now all api calls for all models will be made to `https://simple-investing-app.herokuapp.com/{someModel}`.
 
 ## Ember-Data
 In this application, you're going to display information about users. Before building out templates and forms to handle that 
@@ -199,27 +199,27 @@ export default DS.Model.extend({
 });
 ```
 
-Now that you have an user model, you'll want to retrieve and 
+Now that you have a user model, you'll want to retrieve and 
 display those users. Ember-data will
 manage CRUD operations in the following way (for now, don't worry too much about what the 'store' is):
 
 Create:
 
-`const user = this.get('store').createRecord('user', { firstName, lastName }); user.save()` corresponds to a POST API call to `http://127.0.0.1:5000/users`
+`const user = this.get('store').createRecord('user', { firstName, lastName }); user.save()` corresponds to a POST API call to `https://simple-investing-app.herokuapp.com/users`
 
 Retrieve:
 
-`this.get('store').findAll('user')` corresponds to a GET API call to `http://127.0.0.1:5000/users`
+`this.get('store').findAll('user')` corresponds to a GET API call to `https://simple-investing-app.herokuapp.com/users`
 
-`this.get('store').find('user', 1)` corresponds to a GET API call to `http://127.0.0.1:5000/users/1`
+`this.get('store').find('user', 1)` corresponds to a GET API call to `https://simple-investing-app.herokuapp.com/users/1`
 
 Update:
 
-`user.save()` corresponds to a PUT API call to `http://127.0.0.1:5000/users/id`
+`user.save()` corresponds to a PUT API call to `https://simple-investing-app.herokuapp.com/users/id`
 
 Delete:
 
-`user.delete()` corresponds to a DELETE API call to `http://127.0.0.1:5000/users/id`.
+`user.delete()` corresponds to a DELETE API call to `https://simple-investing-app.herokuapp.com/users/id`.
 
 For now, you'd just like to retrieve the available users. This can be done in a variety of ways but
 you'll go ahead and use the user route you generated earlier.
@@ -236,7 +236,7 @@ export default Ember.Route.extend({
   }
 });
 ```
-As noted above, `this.get('store').findAll('user')` will make a GET API call to `http://127.0.0.1:5000/users`
+As noted above, `this.get('store').findAll('user')` will make a GET API call to `https://simple-investing-app.herokuapp.com/users`
 and will return every available user.
 
 Go to `basic-ember-app/app/templates/application.hbs` and delete the default `{{welcome-page}}` found there. In the future
@@ -257,7 +257,7 @@ Go to `basic-ember-app/app/templates/users.hbs` and update it to display your us
 
 Navigate to localhost:4200/users and you should now see a list of users.
 
-## Create an user
+## Create a user
 Now that you've retrieved your users you want to create a new one. To do so 
 we'll make use of a controller. 
 
@@ -274,7 +274,7 @@ installing controller-test
   create tests/unit/controllers/users-test.js
 ```
 
-Go to `basic-ember-app/app/controllers/users.js` and update it to include a method for creating an user.
+Go to `basic-ember-app/app/controllers/users.js` and update it to include a method for creating a user.
 ```
 import Ember from 'ember';
 
@@ -293,7 +293,7 @@ export default Ember.Controller.extend({
 });
 ```
 
-Go to `basic-ember-app/app/templates/users.hbs` and update it to include fields for creating an user.
+Go to `basic-ember-app/app/templates/users.hbs` and update it to include fields for creating a user.
 
 ```
 <form onsubmit={{action 'createuser'}}>
@@ -337,10 +337,10 @@ libraries for another time and move on.
 
 ## Update and Delete your users
 
-Go to `basic-ember-app/app/controllers/users.js` and update the actions hook with a new method for updating an user.
+Go to `basic-ember-app/app/controllers/users.js` and update the actions hook with a new method for updating a user.
 
 ```
-updateuser(user) {
+updateUser(user) {
   return user.save();
 }
 ```
@@ -361,7 +361,7 @@ to every user.
 
 You'll notice that you're able to pass arguments from the template into your action method
 by specifying those arguments after the name of the action method in question. In this case we've passed through the user.
-`user.save()` is all that's left to do to update the user. That save method will send a PUT request to `http://127.0.0.1:5000/users/id`
+`user.save()` is all that's left to do to update the user. That save method will send a PUT request to `https://simple-investing-app.herokuapp.com/users/id`
 to update the user.
 
 Adding a delete method is just as simple. See whether you can implement it on your own.
